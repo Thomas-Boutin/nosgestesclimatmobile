@@ -10,9 +10,15 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "react": "18.0.0",
-    "react-native": "0.69.5",
-    "publicodes": "1.0.0-beta.47"
+    "@react-navigation/bottom-tabs": "^6.3.3",
+    "@react-navigation/native": "^6.0.12",
+    "@react-navigation/native-stack": "^6.8.0",
+    "@reduxjs/toolkit": "^1.8.5",
+    "publicodes": "1.0.0-beta.47",
+    "react": "18.2.0",
+    "react-native": "0.71.6",
+    "react-native-safe-area-context": "4.5.1",
+    "react-native-screens": "^3.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
