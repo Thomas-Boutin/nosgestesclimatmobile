@@ -9,71 +9,51 @@
  */
 
 import React from 'react';
-import {Button, StyleSheet, Text, useColorScheme, View} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Provider} from 'react-redux';
+import {createFakeGetFootprintList} from './footprint/infrastructure/fake-get-footprint-list';
+import {createStore} from './store';
+import {FootprintList} from './footprint/usecases/footprint-list.query';
+import {Footprint} from './footprint/domain/footprint';
+import {HomeScreen} from './presentation/HomeScreen';
 
 const Tab = createBottomTabNavigator();
 
-const HomeScreen = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+const mustard = Footprint.fromState({
+  id: 'id1',
+  name: 'mustard',
+  amount: 2.5,
+});
+const ketchup = Footprint.fromState({
+  id: 'id2',
+  name: 'ketchup',
+  amount: 2.5,
+});
 
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        Bonjour ezdkzeofozefjz
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}
-      />
-      <Button title="Coucoud" onPress={showMessage} />
-    </View>
-  );
-};
+const productList = new FootprintList([
+  {
+    ...mustard.state,
+  },
+  {
+    ...ketchup.state,
+  },
+]);
 
-const showMessage = () => {
-  console.log('coucou');
-};
+const store = createStore({
+  getFootprintList: createFakeGetFootprintList(productList, {delay: 1000}),
+});
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
