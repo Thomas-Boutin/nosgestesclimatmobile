@@ -1,14 +1,43 @@
-import {Action, configureStore, ThunkAction} from '@reduxjs/toolkit';
+import {
+  combineReducers,
+  configureStore,
+  ConfigureStoreOptions,
+} from '@reduxjs/toolkit';
+import {GetFootprintList} from './footprint/usecases/footprint-list.query';
+import {footprintSlice} from './footprint/usecases/footprint.slice';
 
-const store = configureStore({
-  reducer: {},
+export type ThunkExtraArg = {
+  getFootprintList: GetFootprintList;
+};
+
+export const rootReducer = combineReducers({
+  [footprintSlice.name]: footprintSlice.reducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export const createStore = ({
+  preloadedState,
+  getFootprintList,
+}: {
+  preloadedState?: ConfigureStoreOptions['preloadedState'];
+} & ThunkExtraArg) => {
+  const store = configureStore({
+    reducer: rootReducer,
+    middleware(getDefaultMiddleware) {
+      return getDefaultMiddleware({
+        thunk: {
+          extraArgument: {
+            getFootprintList,
+          },
+        },
+      });
+    },
+    preloadedState,
+  });
+
+  return store;
+};
+
+export type AppStore = ReturnType<typeof createStore>;
+
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

@@ -38,7 +38,7 @@ const HomeScreen = () => {
           },
         ]}
       />
-      <Button title="Coucou" onPress={showMessage} />
+      <Button title="Coucoud" onPress={showMessage} />
     </View>
   );
 };
