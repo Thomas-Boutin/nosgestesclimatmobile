@@ -10,16 +10,19 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@incubateur-ademe/nosgestesclimat": "^3.0.0-rc.2",
     "@react-navigation/bottom-tabs": "^6.3.3",
     "@react-navigation/native": "^6.0.12",
     "@react-navigation/native-stack": "^6.8.0",
     "@reduxjs/toolkit": "^1.8.5",
+    "@xstate/react": "^4.1.1",
     "publicodes": "^1.1.1",
     "react": "18.2.0",
     "react-native": "0.71.6",
     "react-native-safe-area-context": "4.5.1",
     "react-native-screens": "^3.17.0",
-    "react-redux": "^8.0.2"
+    "react-redux": "^8.0.2",
+    "xstate": "^5.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
