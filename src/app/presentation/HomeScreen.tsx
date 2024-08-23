@@ -1,9 +1,9 @@
+import {useMachine} from '@xstate/react';
 import {EvaluatedNode} from 'publicodes';
 import React from 'react';
 import {Button, StyleSheet, Text, View, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {machine} from './xstate';
-import {useMachine} from '@xstate/react';
 export type NGCEvaluatedNode = EvaluatedNode;
 
 export const HomeScreen = () => {
@@ -14,7 +14,10 @@ export const HomeScreen = () => {
     'alimentation . boisson . chaude',
   ).rawNode.description;
 
-  console.log('state', state);
+  console.log(
+    'state',
+    state.context.engine.evaluate('alimentation . boisson . chaude').nodeValue,
+  );
 
   return (
     <View style={styles.sectionContainer}>
@@ -32,8 +35,8 @@ export const HomeScreen = () => {
         title="Test state"
         onPress={() =>
           send({
-            type: 'engine.update',
-            situation: {'alimentation . boisson . chaude': 5},
+            type: 'userAnswer',
+            answer: {'alimentation . boisson . chaude': 5},
           })
         }
       />

@@ -6,16 +6,30 @@ const frenchRules = rules;
 type FrenchRules = typeof frenchRules;
 // const engine = new Engine(frenchRules as FrenchRules);
 
+type Events = {
+  type: 'userAnswer';
+  answer: object;
+};
+// . {'alimentation . boisson . chaude': 5}
+
 export const machine = setup({
   types: {
     context: {
       engine: Engine as unknown as Engine,
       rule: '',
     },
+    events: {} as Events,
+  },
+  actions: {
+    updateEngine: assign({
+      engine: ({context, event}) => context.engine.setSituation(event.answer),
+    }),
   },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5gF8A0IB2B7CdGgEMAHI-EIrWASwBcqsMyAPRARgCZ0BPN95f5EA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0ECWtUBtkBPARQFc4AXbAewDsBiM2MAJwEE7YB3NgbQAMAXUShUNWNmr1RIAB6IAtAEYAnMowBmAQIDsADmUAmAKwAaEEUTKBJjMt3L9ukwF93FujQhxZaVLLiktJ0sgoIiqb6GAL6RgKaxuaWSsrKmhhxhqYeIP5YuATE5FS0oUggQVJlYamqGbGq+gAsmi4WVhFGAGxaRtlurhb5OHiERAByYHKUJbAhgRLVMhXhkTYxcQlJHYj9vc76qgLdOe6uQA */
   id: 'app',
+  initial: 'displayQuestion',
+
   context: {
     engine: new Engine(frenchRules as FrenchRules, {
       strict: {
@@ -25,13 +39,17 @@ export const machine = setup({
     }),
     rule: '',
   },
-  on: {
-    'engine.update': {
-      actions: assign({
-        engine: ({context, event}) =>
-          context.engine.setSituation(event.situation),
-        rule: '2',
-      }),
+
+  states: {
+    displayQuestion: {
+      on: {
+        userAnswer: {
+          target: 'displayNextQuestion',
+          actions: 'updateEngine',
+        },
+      },
     },
+
+    displayNextQuestion: {},
   },
 });
