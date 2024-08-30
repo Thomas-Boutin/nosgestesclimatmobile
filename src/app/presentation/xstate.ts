@@ -1,6 +1,6 @@
 import rules from '@incubateur-ademe/nosgestesclimat/public/co2-model.FR-lang.fr.json';
 import Engine from 'publicodes';
-import {assign, setup} from 'xstate';
+import {setup} from 'xstate';
 
 const frenchRules = rules;
 type FrenchRules = typeof frenchRules;
@@ -10,25 +10,24 @@ type Events = {
   type: 'userAnswer';
   answer: object;
 };
+
+type Context = {
+  engine: Engine;
+  categories: string[];
+};
+
 // . {'alimentation . boisson . chaude': 5}
 
 export const machine = setup({
   types: {
-    context: {
-      engine: Engine as unknown as Engine,
-      rule: '',
-    },
+    context: {} as Context,
     events: {} as Events,
   },
-  actions: {
-    updateEngine: assign({
-      engine: ({context, event}) => context.engine.setSituation(event.answer),
-    }),
-  },
+  actions: {},
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0ECWtUBtkBPARQFc4AXbAewDsBiM2MAJwEE7YB3NgbQAMAXUShUNWNmr1RIAB6IAtAEYAnMowBmAQIDsADmUAmAKwAaEEUTKBJjMt3L9ukwF93FujQhxZaVLLiktJ0sgoIiqb6GAL6RgKaxuaWSsrKmhhxhqYeIP5YuATE5FS0oUggQVJlYamqGbGq+gAsmi4WVhFGAGxaRtlurhb5OHiERAByYHKUJbAhgRLVMhXhkTYxcQlJHYj9vc76qgLdOe6uQA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0BLAdlgLgMQDaADALqKioD2sBWNOVIAHogLQDMpXGATAA4uARgBsI3lwCcAdlJiANCACenfkIylZ-AKwKuAFl5jZu2QF8rynDQhwWaVC1r18jZkjadDu3RiMFMUMRfm1DWWU1BG5zDFlBUK5ZaUldMV1pXWsQJ2w8fBc6BiYWdhjjWQDjMWDQ8MjVdTFpDEFa-h5+MW1SaS4xHLyAESxYVAAbZBUAYWR8MCgaACcsBy9XEs9Qcu5DPkFOkSMU6W0sqM5JVsFM9MqZM8FBKysgA */
   id: 'app',
-  initial: 'displayQuestion',
+  initial: 'init',
 
   context: {
     engine: new Engine(frenchRules as FrenchRules, {
@@ -37,19 +36,20 @@ export const machine = setup({
         noOrphanRule: false,
       },
     }),
-    rule: '',
+    categories: [
+      'transport',
+      'alimentation',
+      'logement',
+      'divers',
+      'services sociétaux',
+    ],
   },
 
   states: {
-    displayQuestion: {
-      on: {
-        userAnswer: {
-          target: 'displayNextQuestion',
-          actions: 'updateEngine',
-        },
-      },
+    init: {
+      always: 'DisplayCategories',
     },
 
-    displayNextQuestion: {},
+    DisplayCategories: {},
   },
 });

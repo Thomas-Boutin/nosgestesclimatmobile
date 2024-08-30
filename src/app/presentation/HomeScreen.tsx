@@ -1,51 +1,31 @@
 import {useMachine} from '@xstate/react';
 import {EvaluatedNode} from 'publicodes';
 import React from 'react';
-import {Button, StyleSheet, Text, View, useColorScheme} from 'react-native';
+import {StyleSheet, Text, View, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {machine} from './xstate';
 export type NGCEvaluatedNode = EvaluatedNode;
 
 export const HomeScreen = () => {
-  const [state, send] = useMachine(machine);
+  const [state] = useMachine(machine);
   const isDarkMode = useColorScheme() === 'dark';
-
-  const boissonChaudeRule = state.context.engine.getRule(
-    'alimentation . boisson . chaude',
-  ).rawNode.description;
-
-  console.log(
-    'state',
-    state.context.engine.evaluate('alimentation . boisson . chaude').nodeValue,
-  );
 
   return (
     <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {boissonChaudeRule}
-      </Text>
-      <Button title="Coucoud" onPress={showMessage} />
-      <Button
-        title="Test state"
-        onPress={() =>
-          send({
-            type: 'userAnswer',
-            answer: {'alimentation . boisson . chaude': 5},
-          })
-        }
-      />
+      {state.context.categories.map(category => (
+        <Text
+          key={category}
+          style={[
+            styles.sectionDescription,
+            {
+              color: isDarkMode ? Colors.light : Colors.dark,
+            },
+          ]}>
+          {category}
+        </Text>
+      ))}
     </View>
   );
-};
-
-const showMessage = () => {
-  console.log('coucou');
 };
 
 const styles = StyleSheet.create({
