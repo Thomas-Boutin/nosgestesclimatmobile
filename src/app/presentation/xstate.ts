@@ -1,19 +1,20 @@
 import rules from '@incubateur-ademe/nosgestesclimat/public/co2-model.FR-lang.fr.json';
 import Engine from 'publicodes';
-import {setup} from 'xstate';
+import {assign, setup} from 'xstate';
 
 const frenchRules = rules;
 type FrenchRules = typeof frenchRules;
 // const engine = new Engine(frenchRules as FrenchRules);
 
 type Events = {
-  type: 'userAnswer';
-  answer: object;
+  type: 'onUserSelectCategory';
+  category: string;
 };
 
 type Context = {
   engine: Engine;
   categories: string[];
+  currentCategory: string | undefined;
 };
 
 // . {'alimentation . boisson . chaude': 5}
@@ -23,9 +24,8 @@ export const machine = setup({
     context: {} as Context,
     events: {} as Events,
   },
-  actions: {},
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0BLAdlgLgMQDaADALqKioD2sBWNOVIAHogLQDMpXGATAA4uARgBsI3lwCcAdlJiANCACenfkIylZ-AKwKuAFl5jZu2QF8rynDQhwWaVC1r18jZkjadDu3RiMFMUMRfm1DWWU1BG5zDFlBUK5ZaUldMV1pXWsQJ2w8fBc6BiYWdhjjWQDjMWDQ8MjVdTFpDEFa-h5+MW1SaS4xHLyAESxYVAAbZBUAYWR8MCgaACcsBy9XEs9Qcu5DPkFOkSMU6W0sqM5JVsFM9MqZM8FBKysgA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0BLAdlgLgMQDaADALqKioD2sBWNOVIAHogLQDMATAIwYArD0FcxAFlIAOPjwBs4gOwAaEAE9OfGRiVTxAThm9FXUrwC+51WkwARLLFQAbZGoDCyfGCg0ATljhCJgBVWDBfAGUwJzAAY3wPLx9fNTJKJBBaenxGZgz2BG5FUgwpPR5FHn0lHkk+OVUNBDkeDC4pfj4DPjEpRSVLKxAcGgg4FhsWLIYmFgKOUQEDOVN+HlN+nkbOdsUMUi0zerlSOS6+S2t0bDx8KboZvNB58SkuHX0V0jWN8S7twpVfQYPhmb51UiKQRQy4gGwYeyOFzuTzePwBeAZaY5Wb5HbFIR8fSkQw8DriM5SAEcUGtLj6LiLHjSJSQniw+GI5yuABiWF8sHwAEUAK5wHFPTIPCVzHYtNqKfRknr1IH9AHrAQM0iCBSkV5SYn6C6DIA */
   id: 'app',
   initial: 'init',
 
@@ -43,6 +43,7 @@ export const machine = setup({
       'divers',
       'services sociétaux',
     ],
+    currentCategory: undefined,
   },
 
   states: {
@@ -50,6 +51,17 @@ export const machine = setup({
       always: 'DisplayCategories',
     },
 
-    DisplayCategories: {},
+    DisplayCategories: {
+      on: {
+        onUserSelectCategory: {
+          target: 'DisplayFirstQuestion',
+          actions: assign({
+            currentCategory: ({event}) => event.category,
+          }),
+        },
+      },
+    },
+
+    DisplayFirstQuestion: {},
   },
 });
