@@ -4,7 +4,6 @@ import {assign, setup} from 'xstate';
 
 const frenchRules = rules;
 type FrenchRules = typeof frenchRules;
-// const engine = new Engine(frenchRules as FrenchRules);
 
 type Events = {
   type: 'User selects a category';
@@ -16,8 +15,6 @@ type Context = {
   categories: string[];
   currentCategory: string | undefined;
 };
-
-// . {'alimentation . boisson . chaude': 5}
 
 export const machine = setup({
   types: {

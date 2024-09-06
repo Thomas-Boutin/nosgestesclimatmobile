@@ -1,9 +1,7 @@
 import {useMachine} from '@xstate/react';
-import {EvaluatedNode} from 'publicodes';
 import React from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {machine} from './xstate';
-export type NGCEvaluatedNode = EvaluatedNode;
 
 export const HomeScreen = () => {
   const [state, send] = useMachine(machine);
