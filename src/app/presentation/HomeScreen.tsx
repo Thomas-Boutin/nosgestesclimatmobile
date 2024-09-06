@@ -1,28 +1,26 @@
 import {useMachine} from '@xstate/react';
 import {EvaluatedNode} from 'publicodes';
 import React from 'react';
-import {StyleSheet, Text, View, useColorScheme} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import {machine} from './xstate';
 export type NGCEvaluatedNode = EvaluatedNode;
 
 export const HomeScreen = () => {
-  const [state] = useMachine(machine);
-  const isDarkMode = useColorScheme() === 'dark';
+  const [state, send] = useMachine(machine);
+
+  function onUserSelectCategory(category: string): void {
+    send({type: 'User selects a category', category});
+  }
 
   return (
     <View style={styles.sectionContainer}>
+      <Text>{state.context.currentCategory}</Text>
       {state.context.categories.map(category => (
-        <Text
+        <Button
           key={category}
-          style={[
-            styles.sectionDescription,
-            {
-              color: isDarkMode ? Colors.light : Colors.dark,
-            },
-          ]}>
-          {category}
-        </Text>
+          title={category}
+          onPress={() => onUserSelectCategory(category)}
+        />
       ))}
     </View>
   );
@@ -30,6 +28,9 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   sectionContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
     marginTop: 32,
     paddingHorizontal: 24,
   },

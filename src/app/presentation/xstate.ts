@@ -59,7 +59,7 @@ export const machine = setup({
       on: {
         'User selects a category': [
           {
-            target: 'DisplayFirstQuestion',
+            target: 'CategoriesDisplayed',
             actions: ['onUserSelectCategory'],
           },
         ],
