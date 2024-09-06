@@ -7,7 +7,7 @@ type FrenchRules = typeof frenchRules;
 // const engine = new Engine(frenchRules as FrenchRules);
 
 type Events = {
-  type: 'onUserSelectCategory';
+  type: 'User selects a category';
   category: string;
 };
 
@@ -24,8 +24,13 @@ export const machine = setup({
     context: {} as Context,
     events: {} as Events,
   },
+  actions: {
+    onUserSelectCategory: assign({
+      currentCategory: ({event}) => event.category,
+    }),
+  },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0BLAdlgLgMQDaADALqKioD2sBWNOVIAHogLQDMATAIwYArD0FcxAFlIAOPjwBs4gOwAaEAE9OfGRiVTxAThm9FXUrwC+51WkwARLLFQAbZGoDCyfGCg0ATljhCJgBVWDBfAGUwJzAAY3wPLx9fNTJKJBBaenxGZgz2BG5FUgwpPR5FHn0lHkk+OVUNBDkeDC4pfj4DPjEpRSVLKxAcGgg4FhsWLIYmFgKOUQEDOVN+HlN+nkbOdsUMUi0zerlSOS6+S2t0bDx8KboZvNB58SkuHX0V0jWN8S7twpVfQYPhmb51UiKQRQy4gGwYeyOFzuTzePwBeAZaY5Wb5HbFIR8fSkQw8DriM5SAEcUGtLj6LiLHjSJSQniw+GI5yuABiWF8sHwAEUAK5wHFPTIPCVzHYtNqKfRknr1IH9AHrAQM0iCBSkV5SYn6C6DIA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0BLAdlgLgMQDaADALqKioD2sBWNOVIAHogLQDMATAIwYArD0FcxAFlIAOPjwBs4gOwAaEAE9OfGRiVTxAThm9FXUrwC+51WkwARLLFQAbZGoDCyfGCg0ATljhCJgBVWDBfAGUwJzAAY3wPLx9fNTJKJBBaenxGZgz2BG5FUgwpPR5FHn0lHkk+OVUNBDkeDC4pfj4DPjEpRSVLKxAcGgg4FhsWLIYmFgKOUQEDOVN+HlN+nkbOdrkMOTND2TkpLjk5S2t0bDx8KboZvNB58VOdfRXSNY3xLu3Cqr6DB8Q61UggxSCSGXEA2DD2Rwudyebx+ALwDLTHKzfI7YpCPj6UiGHgdcRyLT-Dgg1pcfRcRY8aRKUiVGFwhHOVwAMSwvlg+AAigBXODYp6ZB7iuY7FptRT6Uk9eqA-r-dYCemkQQKUivKRE-R8QbmIA */
   id: 'app',
   initial: 'init',
 
@@ -43,22 +48,21 @@ export const machine = setup({
       'divers',
       'services sociétaux',
     ],
-    currentCategory: undefined,
+    currentCategory: 'transport',
   },
 
   states: {
     init: {
-      always: 'DisplayCategories',
+      always: 'CategoriesDisplayed',
     },
-
-    DisplayCategories: {
+    CategoriesDisplayed: {
       on: {
-        onUserSelectCategory: {
-          target: 'DisplayFirstQuestion',
-          actions: assign({
-            currentCategory: ({event}) => event.category,
-          }),
-        },
+        'User selects a category': [
+          {
+            target: 'DisplayFirstQuestion',
+            actions: ['onUserSelectCategory'],
+          },
+        ],
       },
     },
 
