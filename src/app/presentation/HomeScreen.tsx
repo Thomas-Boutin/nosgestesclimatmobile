@@ -13,6 +13,7 @@ export const HomeScreen = () => {
   return (
     <View style={styles.sectionContainer}>
       <Text>{state.context.currentCategory}</Text>
+      <Text>{state.context.currentQuestion}</Text>
       {state.context.categories.map(category => (
         <Button
           key={category}
