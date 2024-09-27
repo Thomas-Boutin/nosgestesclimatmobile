@@ -1,1 +1,0 @@
-const getListOfRules = (rules: any) => {};
