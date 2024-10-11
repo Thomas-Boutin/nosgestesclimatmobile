@@ -1,5 +1,7 @@
-describe('get first question in rules', () => {
-  test('adds 1 + 2 to equal 3', () => {
-    expect(true).toBe(true);
+import rules from '@incubateur-ademe/nosgestesclimat/public/co2-model.FR-lang.fr.json';
+
+describe('get first question', () => {
+  test('should get first question of category', () => {
+    expect(getFirstQuestionOf("logement")).toBe(true);
   });
 });
