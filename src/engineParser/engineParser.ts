@@ -1,3 +1,4 @@
+import {DottedName} from '@incubateur-ademe/nosgestesclimat';
 import rules from '@incubateur-ademe/nosgestesclimat/public/co2-model.FR-lang.fr.json';
 import Engine from 'publicodes';
 const frenchRules = rules;
@@ -18,13 +19,27 @@ export class EngineParser {
     heaterFootprint: number,
     inhabitantNumber: number,
   ): number {
-    return (
-      defaultDegreesValue + gainsOneDegree + heaterFootprint + inhabitantNumber
-    );
+    return 4;
   }
 
-  getQuestion(category: string): Question {
-    return this.engine.getRule(category);
+  getQuestion(category: DottedName): Question {
+    const rule = this.engine.getRule(category);
+
+    return {
+      questionTitle: rule.rawNode.question ?? '',
+      icon: rule.rawNode['icônes'] ? rule.rawNode['icônes'] : '',
+      description: rule.rawNode.description ?? '',
+      defaultValue: rule.rawNode['par défaut']
+        ? Number(rule.rawNode['par défaut'])
+        : 0,
+      suggestedAnswers: Object.entries(rule.suggestions).reduce(
+        (acc, [key, value]) => {
+          acc[key] = Number(value.rawNode);
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
+    };
   }
 }
 
