@@ -1,40 +1,35 @@
+import {useMachine} from '@xstate/react';
 import React from 'react';
-import {Button, StyleSheet, Text, View, useColorScheme} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Button, StyleSheet, Text, View} from 'react-native';
+import {machine} from './xstate';
 
 export const HomeScreen = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [state, send] = useMachine(machine);
+
+  function onUserSelectCategory(category: string): void {
+    send({type: 'User selects a category', category});
+  }
 
   return (
     <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        Bonjour ezdkzeofozefjz
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}
-      />
-      <Button title="Coucoud" onPress={showMessage} />
+      <Text>{state.context.currentCategory}</Text>
+      <Text>{state.context.currentQuestion}</Text>
+      {state.context.categories.map(category => (
+        <Button
+          key={category}
+          title={category}
+          onPress={() => onUserSelectCategory(category)}
+        />
+      ))}
     </View>
   );
 };
 
-const showMessage = () => {
-  console.log('coucou');
-};
-
 const styles = StyleSheet.create({
   sectionContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
     marginTop: 32,
     paddingHorizontal: 24,
   },
